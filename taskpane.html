@@ -27,7 +27,7 @@
      */
     function sayHello() {
         Office.context.mailbox.item.body.setAsync(
-            html,
+            `<table><tr><td>India</td><td>Gujarat</td></tr></table>`,
             {
                 coercionType: "html", // Write text as HTML
             },
