@@ -11,27 +11,40 @@
 
 <body>
     <p>This add-in will insert the text 'Hello world!' in a new message.</p>
-    <button id="helloButton">Say hello</button>
-    <br />
-    <button id="ByeButton">Say Bye</button>
-    <br />
+    <button id="TableButton">Print Table</button>
+    <br/>
+    <br/>
+    <button id="FTextButton">Print Formated Text</button>
+    <br/>
+    <br/>
+    <button id="ALinkButton">Print Anchor Link</button>
 </body>
+
+<style>
+table, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
 
 <script>
 
     Office.onReady((info) => {
         if (info.host === Office.HostType.Outlook) {
-            document.getElementById("helloButton").onclick = sayHello;
+            document.getElementById("TableButton").onclick = sayTable;
         }
         if (info.host === Office.HostType.Outlook) {
-            document.getElementById("ByeButton").onclick = sayBye;
+            document.getElementById("FTextButton").onclick = sayFtext;
+        }
+        if (info.host === Office.HostType.Outlook) {
+            document.getElementById("ALinkButton").onclick = sayAlink;
         }
     });
     var html = `<table><tr><td>India</td><td>Gujarat</td></tr></table>`
     /**
      * Writes 'Hello world!' to a new message body.
      */
-    function sayHello() {
+    function sayTable() {
         Office.context.mailbox.item.body.setAsync(
             `<table><tr><td>India</td><td>Gujarat</td></tr></table>`,
             {
@@ -48,9 +61,25 @@
         );
     }
 
-    function sayBye() {
+    function sayFtext() {
         Office.context.mailbox.item.body.setAsync(
             `<div style="color:red;"><strong>Hello</strong></div>`,
+            {
+                coercionType: "html", // Write text as HTML
+            },
+
+            // Callback method to check that setAsync succeeded
+            function (asyncResult) {
+                if (asyncResult.status ==
+                    Office.AsyncResultStatus.Failed) {
+                    write(asyncResult.error.message);
+                }
+            }
+        );
+    }
+    function sayAlink() {
+        Office.context.mailbox.item.body.setAsync(
+            `<a href="www.google.com">Google</a>`,
             {
                 coercionType: "html", // Write text as HTML
             },
